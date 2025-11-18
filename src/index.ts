@@ -56,15 +56,32 @@ export default {
           },
         });
 
-        // Extract the response content
+        // Extract the response content from Responses API format
         let responseContent = '';
-        if (response.response) {
+
+        // Handle new Responses API format (gpt-oss models)
+        if (response.output && Array.isArray(response.output)) {
+          // Find the message output (not reasoning)
+          const messageOutput = response.output.find((item: any) => item.type === 'message');
+          if (messageOutput && messageOutput.content && Array.isArray(messageOutput.content)) {
+            // Extract text from the first content item
+            const textContent = messageOutput.content.find((item: any) => item.type === 'output_text' || item.text);
+            if (textContent && textContent.text) {
+              responseContent = textContent.text;
+            }
+          }
+        }
+        // Fallback to other response formats
+        else if (response.response) {
           responseContent = response.response;
         } else if (response.choices && response.choices[0]?.message?.content) {
           responseContent = response.choices[0].message.content;
         } else if (typeof response === 'string') {
           responseContent = response;
-        } else {
+        }
+
+        // If we still don't have content, return the whole response as JSON for debugging
+        if (!responseContent) {
           responseContent = JSON.stringify(response);
         }
 
