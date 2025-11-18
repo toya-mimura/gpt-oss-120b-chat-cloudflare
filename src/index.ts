@@ -50,10 +50,25 @@ export default {
 
         // Call Workers AI with gpt-oss-120b model
         const response = await env.AI.run('@cf/openai/gpt-oss-120b', {
-          messages: messages,
+          input: messages,
+          reasoning: {
+            effort: 'medium',
+          },
         });
 
-        return new Response(JSON.stringify({ response: response.response }), {
+        // Extract the response content
+        let responseContent = '';
+        if (response.response) {
+          responseContent = response.response;
+        } else if (response.choices && response.choices[0]?.message?.content) {
+          responseContent = response.choices[0].message.content;
+        } else if (typeof response === 'string') {
+          responseContent = response;
+        } else {
+          responseContent = JSON.stringify(response);
+        }
+
+        return new Response(JSON.stringify({ response: responseContent }), {
           headers: {
             'Content-Type': 'application/json',
             ...corsHeaders,
