@@ -1,0 +1,24 @@
+{
+  "name": "gpt-oss-120b-chat-cloudflare",
+  "version": "1.0.0",
+  "description": "Simple AI Chat application using Cloudflare Workers AI with gpt-oss-120b model",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "ai",
+    "chat",
+    "gpt-oss"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "wrangler": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
+}
